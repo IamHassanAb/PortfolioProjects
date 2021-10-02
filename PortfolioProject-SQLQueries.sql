@@ -1,4 +1,4 @@
------- SQL Data Exploration Project ------
+------ SQL Data Exploration ------
 
 -- Selecting Everything From CovidDeaths TABLE
 Select *
