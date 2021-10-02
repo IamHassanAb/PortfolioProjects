@@ -51,7 +51,10 @@ Order By InfectPercentage desc
 
 -- Showing Countries with Highest Death Counts
 
-Select location, MAX(total_deaths) as HighestDeath--, Max((total_cases/population)*100) as InfectPercentage
+Select 
+	location, 
+	MAX(total_deaths) as HighestDeath
+	--, Max((total_cases/population)*100) as InfectPercentage
 From PortfolioProject..CovidDeaths
 Where continent Is Not Null
 -- and location Like '%Pakistan%'
@@ -62,7 +65,10 @@ Order By HighestDeath desc
 -- Breaking Things Down By Continent
 
 -- First Way --
-Select location, MAX(total_deaths) as HighestDeath--, Max((total_cases/population)*100) as InfectPercentage
+Select 
+	location, 
+	MAX(total_deaths) as HighestDeath
+	--, Max((total_cases/population)*100) as InfectPercentage
 From PortfolioProject..CovidDeaths
 Where continent Is Null
 -- and location Like '%Pakistan%'
@@ -71,7 +77,10 @@ Order By HighestDeath desc
 -- **********
 
 -- Second Way
-Select continent, MAX(total_deaths) as HighestDeath--, Max((total_cases/population)*100) as InfectPercentage
+Select 
+	continent, 
+	MAX(total_deaths) as HighestDeath
+	--, Max((total_cases/population)*100) as InfectPercentage
 From PortfolioProject..CovidDeaths
 Where continent Is Not Null
 -- and location Like '%Pakistan%'
@@ -97,14 +106,14 @@ Where continent Is Not Null
 -- Looking at total population vs vaccinations
 
 Select 
-cd.continent,
-cd.location,
-cd.date, 
-cd.population, 
-cv.new_vaccinations,
-SUM(CONVERT(int, cv.new_vaccinations)) --SUM(CAST(cv.new_vaccinations AS int)) can also be used 
-Over 
-(Partition By cd.location Order By cd.location,cd.date) As RollingVaccinatedSum 
+	cd.continent,
+	cd.location,
+	cd.date, 
+	cd.population, 
+	cv.new_vaccinations,
+	SUM(CONVERT(int, cv.new_vaccinations)) --SUM(CAST(cv.new_vaccinations AS int)) can also be used 
+	Over 
+	(Partition By cd.location Order By cd.location,cd.date) As RollingVaccinatedSum 
 From PortfolioProject..CovidDeaths cd
 Join PortfolioProject..CovidVaccinations cv
 	On cd.date = cv.date
@@ -118,14 +127,14 @@ With PopVSVac (Continent, Location, Date, Population, new_vaccinations, RollingV
 as
 (
 Select 
-cd.continent,
-cd.location,
-cd.date, 
-cd.population, 
-cv.new_vaccinations,
-SUM(CONVERT(int, cv.new_vaccinations)) 
-Over 
-(Partition By cd.location Order By cd.location,cd.date) As RollingVaccinatedSum 
+	cd.continent,
+	cd.location,
+	cd.date, 
+	cd.population, 
+	cv.new_vaccinations,
+	SUM(CONVERT(int, cv.new_vaccinations)) 
+	Over 
+	(Partition By cd.location Order By cd.location,cd.date) As RollingVaccinatedSum 
 From PortfolioProject..CovidDeaths cd
 Join PortfolioProject..CovidVaccinations cv
 	On cd.date = cv.date
@@ -145,24 +154,24 @@ Order By 2,3
 Drop Table If Exists #PercentPopulationVaccinated
 Create Table #PercentPopulationVaccinated
 (
-Continent nvarchar(255),
-Location nvarchar(255),
-Date datetime,
-Population numeric,
-New_Vaccinations numeric,
-RollingVaccinatedSum numeric
+	Continent nvarchar(255),
+	Location nvarchar(255),
+	Date datetime,
+	Population numeric,
+	New_Vaccinations numeric,
+	RollingVaccinatedSum numeric
 )
 
 INSERT INTO #PercentPopulationVaccinated
 Select 
-cd.continent,
-cd.location,
-cd.date, 
-cd.population, 
-cv.new_vaccinations,
-SUM(CONVERT(int, cv.new_vaccinations)) 
-Over 
-(Partition By cd.location Order By cd.location,cd.date) As RollingVaccinatedSum 
+	cd.continent,
+	cd.location,
+	cd.date, 
+	cd.population, 
+	cv.new_vaccinations,
+	SUM(CONVERT(int, cv.new_vaccinations)) 
+	Over 
+	(Partition By cd.location Order By cd.location,cd.date) As RollingVaccinatedSum 
 From PortfolioProject..CovidDeaths cd
 Join PortfolioProject..CovidVaccinations cv
 	On cd.date = cv.date
@@ -182,14 +191,14 @@ GO
 CREATE VIEW PercentVaccinated
 AS
 Select 
-cd.continent,
-cd.location,
-cd.date, 
-cd.population, 
-cv.new_vaccinations,
-SUM(CONVERT(int, cv.new_vaccinations)) 
-Over 
-(Partition By cd.location Order By cd.location,cd.date) As RollingVaccinatedSum 
+	cd.continent,
+	cd.location,
+	cd.date, 
+	cd.population, 
+	cv.new_vaccinations,
+	SUM(CONVERT(int, cv.new_vaccinations)) 
+	Over 
+	(Partition By cd.location Order By cd.location,cd.date) As RollingVaccinatedSum 
 From PortfolioProject..CovidDeaths cd
 Join PortfolioProject..CovidVaccinations cv
 	On cd.date = cv.date
