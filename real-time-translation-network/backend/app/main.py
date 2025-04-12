@@ -1,8 +1,9 @@
 from fastapi import FastAPI, WebSocket
 from fastapi.middleware.cors import CORSMiddleware
-from services.langdetect import language_detection
+from services.language_detection import language_detection
 from services.translation import translation_service
 from services.processmessage import process_message
+import threading
 # from .core.config import settings
 import json
 
@@ -27,18 +28,32 @@ async def websocket_endpoint(websocket: WebSocket, room_id: str):
     try:
         while True:
             data = await websocket.receive_text()
+            print(data)
             # TODO: Process message and send translation
             message = json.loads(data)
-            response = process_message.perform(message)
-            print(response)
+            # print(message)
+            language_detection.process(message)
+            # translated_text = translation_service.translate(
+            #     text=original_text,
+            #     source_lang=source_lang,
+            #     target_lang=target_lang
+            # )
+            # print(response)
             
             
-            await websocket.send_text(f"Message received in room {room_id}: {response}")
+            await websocket.send_text(f"Message received in room {room_id}")
     except Exception as e:
         print(f"Error: {e}")
     finally:
         await websocket.close()
 
+def start_translation_consumer():
+    translation_service.consume()
+
+
+
 if __name__ == "__main__":
     import uvicorn
+
+    translation_thread = threading.Thread(target=start_translation_consumer, daemon=True)
     uvicorn.run(app, host="0.0.0.0", port=8000)
