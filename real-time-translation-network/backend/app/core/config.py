@@ -16,16 +16,24 @@ class Settings(BaseSettings):
     DEFAULT_TARGET_LANG: str = "es"
     
     # RabbitMQ Settings
-    RABBITMQ_URL: str = "5672://localhost"
+    RABBITMQ_URL: str = "amqp://guest:guest@localhost:5672/"
     TRANSLATION_QUEUE: str = "translation_queue"
     DETECTION_QUEUE: str = "detection_queue"
     # RESPONSE_QUEUE: str = "response_queue"
     
     # HuggingFace Settings
-    HUGGINGFACE_MODEL: str = "Helsinki-NLP/opus-mt-{src}-{tgt}"
+    HUGGINGFACE_MODEL_URL: str = "https://api-inference.huggingface.co/models/Helsinki-NLP/opus-mt-{src}-{tgt}"
 
     # Languages Currently Supported
     # AVAILABLE_LANGUAGES = {"en-fr", "en-de", "en-ar", "ar-en", "de-en", "fr-en"}
+
+    # Redis Settings
+    REDIS_HOST: str = "localhost"
+    REDIS_PORT: int = 6379
+    REDIS_DB: int = 0
+    # Redis Cache Settings
+    # REDIS_CACHE_TIMEOUT: int = 60
+    
     
     class Config:
         case_sensitive = True
