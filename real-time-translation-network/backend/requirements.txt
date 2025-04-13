@@ -1,0 +1,13 @@
+fastapi[all]
+uvicorn
+websockets
+pydantic
+transformers
+pika
+python-dotenv
+pytest
+pytest-asyncio
+httpx
+redis
+langid
+langdetect
